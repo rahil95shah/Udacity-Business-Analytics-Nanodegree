@@ -1,0 +1,60 @@
+Query 1: Which year have the most Invoices and Income?
+
+Select STRFTIME('%Y',Invoice.InvoiceDate) as Year, 
+       Count(Invoice.Total) as Invoice_Total, 
+       Round(Sum(InvoiceLine.UnitPrice),2) as Total_Sellling_Amount
+       From Invoice
+       Join InvoiceLine
+       ON Invoice.InvoiceId = InvoiceLine.InvoiceId
+       Group by Year
+
+---------------------------------------------------------------------------
+
+Query 2: Who are the Top 10 artist with maximum albums in Rock Genre?
+
+Select Artist.name, 
+       count(Album.Title) as Total_Album,
+       Genre.Name as GenreName
+       From Artist
+       Join Album
+       ON Artist.Artistid = Album.Artistid
+       Join Track
+       ON Album.Artistid = Track.AlbumId
+       Join Genre
+       ON Track.GenreId = Genre.GenreId
+       WHERE GenreName = ('Rock')
+       Group by Artist.name        
+       Order by Total_Album Desc
+       Limit 10
+       
+---------------------------------------------------------------------------
+
+Query 3: Which Top 10 Countries spend the most on music?
+
+Select Customer.Country as CustomerCountry,  
+       Round(Sum(InvoiceLine.UnitPrice),2) as Total_Amount_Spend
+       From Invoice
+       Join Customer
+       ON Invoice.CustomerId = Customer.CustomerId
+       Join InvoiceLine
+       ON Invoice.InvoiceId = InvoiceLine.InvoiceId
+       Group by CustomerCountry
+       Order by Total_Amount_Spend Desc
+       Limit 10
+  
+---------------------------------------------------------------------------
+
+Query 4: Which artists are making the longer songs on average? (Top 10)
+
+Select Distinct Artist.Name as AName,
+       Sum(Track.Milliseconds)/count(Track.AlbumId) as Avg_Song_Length       
+       From Track 
+       Join Album
+       ON Track.AlbumId = Album.AlbumId
+       join Artist
+       ON Album.Artistid = Artist.Artistid 
+       Group by Artist.name
+       Order by Avg_Song_Length Desc 
+       Limit 10
+ 
+---------------------------------------------------------------------------
